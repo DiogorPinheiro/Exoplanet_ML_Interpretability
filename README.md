@@ -1,2 +1,2 @@
 # Interpretable Exoplanet NeuralNet
-Using LIME To Find How Neural Networks Classify An Exoplanet
+Using LIME to find how neural networks classify an exoplanet
