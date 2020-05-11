@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     random_ind = np.random.choice(
         global_X_shaped.shape[0], 1000, replace=False)
-    data = global_X_shaped[random_ind[0:500]]
+    data = global_X_shaped[random_ind[0:50]]
     e = shap.DeepExplainer(
         (model.layers[0].input, model.layers[-1].output), data)
     values = e.shap_values(global_X_shaped)
