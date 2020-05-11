@@ -1,15 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from lime import explanation
-from lime import lime_base
+import shap
 import math
 from keras.models import load_model
 import pandas as pd
 
-from sklearn.neighbors import KNeighborsClassifier as KNN
-from sklearn.metrics import accuracy_score as acc
-
-from lime_TimeSeries import LimeTimeSeriesExplanation
 from utilities import recall_m, f1_m, precision_m, auc_roc, checkPrediction
 from evaluation import evaluation
 
@@ -49,25 +44,10 @@ if __name__ == "__main__":
 
     # evaluation(model, global_X_shaped, global_Y)  # Evaluate Model
 
-    idx = 5
-    num_features = 10
-    num_slices = 24
-    series = global_X_shaped[correct_predictions[0]]
-
-    explainer = LimeTimeSeriesExplanation(
-        class_names=['0', '1'], feature_selection='auto')
-    exp = explainer.explain_instance(series, model.predict, num_features=num_features, num_samples=50, num_slices=num_slices,
-                                     replacement_method='total_mean', training_set=global_X_shaped)
-    exp.as_list()
-
-    values_per_slice = math.ceil(len(series) / num_slices)
-    plt.plot(series, color='b', label='Explained instance')
-    plt.plot(global_X.iloc[15:, :].mean(),
-             color='green', label='Mean of other class')
-    plt.legend(loc='lower left')
-    for i in range(num_features):
-        feature, weight = exp.as_list()[i]
-        start = feature * values_per_slice
-        end = start + values_per_slice
-        plt.axvspan(start, end, color='red', alpha=abs(weight*2))
-    plt.show()
+    random_ind = np.random.choice(
+        global_X_shaped.shape[0], 1000, replace=False)
+    data = global_X_shaped[random_ind[0:500]]
+    e = shap.DeepExplainer(
+        (model.layers[0].input, model.layers[-1].output), data)
+    values = e.shap_values(global_X_shaped)
+    shap.summary_plot(values, global_X_shaped)

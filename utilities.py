@@ -2,8 +2,18 @@ import matplotlib.pyplot as plt
 from keras import backend as K
 import tensorflow as tf
 
+# ------------------------------ Scores/Predictions --------------------------------------
+
+
+def checkPrediction(model, datax, datay):
+    prediction = model.predict_classes(datax)
+    # for i in range(len(prediction)):
+    #    print("i = {} ; X={} ; Predicted={}".format(
+    #        i, datay[i], prediction[i]))
+    return prediction
 
 # ------------------------------ Evaluation Metrics ----------------------------------------
+
 
 def recall_m(y_true, y_pred):
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
