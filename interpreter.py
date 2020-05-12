@@ -6,9 +6,6 @@ import math
 from keras.models import load_model
 import pandas as pd
 
-from sklearn.neighbors import KNeighborsClassifier as KNN
-from sklearn.metrics import accuracy_score as acc
-
 from lime_TimeSeries import LimeTimeSeriesExplanation
 from utilities import recall_m, f1_m, precision_m, auc_roc, checkPrediction
 from evaluation import evaluation

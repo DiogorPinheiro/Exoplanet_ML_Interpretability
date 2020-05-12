@@ -44,10 +44,16 @@ if __name__ == "__main__":
 
     # evaluation(model, global_X_shaped, global_Y)  # Evaluate Model
 
-    random_ind = np.random.choice(
-        global_X_shaped.shape[0], 1000, replace=False)
-    data = global_X_shaped[random_ind[0:50]]
-    e = shap.DeepExplainer(
-        (model.layers[0].input, model.layers[-1].output), data)
-    values = e.shap_values(global_X_shaped)
-    shap.summary_plot(values, global_X_shaped)
+    #random_ind = np.random.choice(
+    #    global_X_shaped.shape[0], 1000, replace=False)
+    #data = global_X_shaped[random_ind[0:50]]
+    #e = shap.DeepExplainer(
+    #    (model.layers[0].input, model.layers[-1].output), data)
+    #values = e.shap_values(global_X_shaped[:500])
+    #shap.summary_plot(values[0], global_X_shaped[:500])
+    #shap.force_plot(e.expected_value,values[0])
+
+    #model_summary = shap.kmeans(global_X_shaped,25)
+    explainer = shap.DeepExplainer(model,global_X_shaped[:50])
+    shap_values =  explainer.shap_values(global_X_shaped[:50])
+    shap.summary_plot(shap_values[0][0],global_X_shaped[0])
