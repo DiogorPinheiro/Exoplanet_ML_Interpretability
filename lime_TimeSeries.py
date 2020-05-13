@@ -153,6 +153,6 @@ class LimeTimeSeriesExplanation(object):
                     tmp_series[index:(
                         index + values_per_slice)] = np.mean(training_set.mean())
             inverse_data.append(tmp_series)
-        labels = classifier_fn(inverse_data)
+        labels = classifier_fn(np.array(inverse_data))
         distances = distance_fn(data)
         return data, labels, distances

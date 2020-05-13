@@ -23,37 +23,49 @@ def getModel(model_name):
 
 if __name__ == "__main__":
 
-    data = pd.read_csv('data/global_test.csv', sep=',').astype(float)
+    # ---------------------- Train Data -----------------------------------------
+    data_train = pd.read_csv('data/global_train.csv', sep=',').astype(float)
 
-    global_Y = data.iloc[:, -1]  # Label
-    global_X = data.iloc[:, 0:-1]
+    train_Y = data_train.iloc[:, -1]  # Label
+    train_X = data_train.iloc[:, 0:-1]
 
-    global_X_shaped = np.expand_dims(
-        global_X, axis=2)
+    train_X_shaped = np.expand_dims(
+        train_X, axis=2)
+    # ---------------------- Test Data --------------------------------------------
+    data_test = pd.read_csv('data/global_test.csv', sep=',').astype(float)
+
+    test_Y = data_test.iloc[:, -1]  # Label
+    test_X = data_test.iloc[:, 0:-1]
+
+    test_X_shaped = np.expand_dims(
+        test_X, axis=2)
 
     model = getModel(CNN_MODEL_DIRECTORY)   # Load Model
 
     # ----------------------- Check for correct predictions ------------------------
-    prediction = checkPrediction(model, global_X_shaped, global_Y)
+    prediction = checkPrediction(model, test_X_shaped, test_Y)
     correct_predictions = []
 
-    for index, value in enumerate(global_Y):
+    for index, value in enumerate(test_Y):
         if value == prediction[index] and value == 1:
             correct_predictions.append(index)
     # -------------------------------------------------------------------------------
 
-    # evaluation(model, global_X_shaped, global_Y)  # Evaluate Model
+    # evaluation(model, test_X_shaped, test_Y)  # Evaluate Model
 
-    #random_ind = np.random.choice(
-    #    global_X_shaped.shape[0], 1000, replace=False)
-    #data = global_X_shaped[random_ind[0:50]]
-    #e = shap.DeepExplainer(
+    # random_ind = np.random.choice(
+    #    test_X_shaped.shape[0], 1000, replace=False)
+    # data = test_X_shaped[random_ind[0:50]]
+    # e = shap.DeepExplainer(
     #    (model.layers[0].input, model.layers[-1].output), data)
-    #values = e.shap_values(global_X_shaped[:500])
-    #shap.summary_plot(values[0], global_X_shaped[:500])
-    #shap.force_plot(e.expected_value,values[0])
+    # values = e.shap_values(test_X_shaped[:500])
+    # shap.summary_plot(values[0], test_X_shaped[:500])
+    # shap.force_plot(e.expected_value,values[0])
 
-    #model_summary = shap.kmeans(global_X_shaped,25)
-    explainer = shap.DeepExplainer(model,global_X_shaped[:50])
-    shap_values =  explainer.shap_values(global_X_shaped[:50])
-    shap.summary_plot(shap_values[0][0],global_X_shaped[0])
+    # model_summary = shap.kmeans(test_X_shaped,25)
+    explainer = shap.DeepExplainer(model, train_X_shaped[:50])
+    shap_values = explainer.shap_values(test_X_shaped[:1])
+    y_pred = model.predict(test_X_shaped[:1])
+    print('Actual Category: %s, Predict Category: %s' % (test_Y[0], y_pred[0]))
+    shap.force_plot(explainer.expected_value[0], shap_values[0][0]
+    # shap.summary_plot(shap_values[0][0], test_X_shaped[0])

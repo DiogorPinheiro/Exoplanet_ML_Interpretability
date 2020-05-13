@@ -25,41 +25,53 @@ def getModel(model_name):
 
 if __name__ == "__main__":
 
-    data = pd.read_csv('data/global_test.csv', sep=',').astype(float)
+   # ---------------------- Train Data -----------------------------------------
+    data_train = np.loadtxt(
+        'data/global_train.csv', delimiter=',')
 
-    global_Y = data.iloc[:, -1]  # Label
-    global_X = data.iloc[:, 0:-1]
+    train_Y = data_train[:, -1]  # Label
+    train_X = data_train[:, 0:-1]
 
-    global_X_shaped = np.expand_dims(
-        global_X, axis=2)
+    train_X_shaped = np.expand_dims(
+        train_X, axis=2)
+    # ---------------------- Test Data --------------------------------------------
+    data_test = np.loadtxt(
+        'data/global_test.csv', delimiter=',')
+
+    test_Y = data_test[:, -1]  # Label
+    test_X = data_test[:, 0:-1]
+
+    test_X_shaped = np.expand_dims(
+        test_X, axis=2)
 
     model = getModel(CNN_MODEL_DIRECTORY)   # Load Model
 
     # ----------------------- Check for correct predictions ------------------------
-    prediction = checkPrediction(model, global_X_shaped, global_Y)
+    prediction = checkPrediction(model, test_X_shaped, test_Y)
     correct_predictions = []
 
-    for index, value in enumerate(global_Y):
+    for index, value in enumerate(test_Y):
         if value == prediction[index] and value == 1:
             correct_predictions.append(index)
     # -------------------------------------------------------------------------------
 
     # evaluation(model, global_X_shaped, global_Y)  # Evaluate Model
 
-    idx = 5
+    idx = correct_predictions[0]
     num_features = 10
     num_slices = 24
-    series = global_X_shaped[correct_predictions[0]]
+    series = test_X_shaped[idx, :]
 
     explainer = LimeTimeSeriesExplanation(
         class_names=['0', '1'], feature_selection='auto')
-    exp = explainer.explain_instance(series, model.predict, num_features=num_features, num_samples=50, num_slices=num_slices,
-                                     replacement_method='total_mean', training_set=global_X_shaped)
-    exp.as_list()
-
+    exp = explainer.explain_instance(test_X_shaped[idx], model.predict_proba, num_features=num_features, num_samples=50, num_slices=num_slices,
+                                     replacement_method='total_mean', training_set=train_X_shaped, labels=(0,))
+    print(exp.as_list(label=0))
+    # exp.as_pyplot_figure()
+    print(exp.available_labels()[1])
     values_per_slice = math.ceil(len(series) / num_slices)
     plt.plot(series, color='b', label='Explained instance')
-    plt.plot(global_X.iloc[15:, :].mean(),
+    plt.plot(test_X_shaped[15:, :].mean(),
              color='green', label='Mean of other class')
     plt.legend(loc='lower left')
     for i in range(num_features):
