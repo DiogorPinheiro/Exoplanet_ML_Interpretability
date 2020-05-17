@@ -31,7 +31,6 @@ global_X = []
 
 
 def new_predict(data):
-    print(data.shape)
     y_pred = model.predict(data).reshape(-1, 1)
     y_pred = (y_pred > 0.5)
     print(np.array(
@@ -60,36 +59,35 @@ if __name__ == "__main__":
     test_X_shaped = np.expand_dims(
         test_X, axis=2)
 
-    # model = getModel(CNN_MODEL_DIRECTORY)   # Load Model
-    model = KNN()
-    model.fit(train_X, train_Y)
+    model = getModel(CNN_MODEL_DIRECTORY)   # Load Model
+    #model = KNN()
+    #model.fit(train_X, train_Y)
     # ----------------------- Check for correct predictions ------------------------
-    '''
+
     prediction = checkPrediction(model, test_X_shaped, test_Y)
     correct_predictions = []
 
     for index, value in enumerate(test_Y):
         if value == prediction[index] and value == 1:
             correct_predictions.append(index)
-    '''
+
     # -------------------------------------------------------------------------------
 
     # evaluation(model, global_X_shaped, global_Y)  # Evaluate Model
 
-    #idx = correct_predictions[0]
+    idx = correct_predictions[2]
     num_features = 10
     num_slices = 24
-    #series = test_X_shaped[0]
-    series = test_X[0]
+    series = test_X_shaped[idx]
+    #series = test_X[0]
     global_X = test_X_shaped
 
-    '''
     explainer = LimeTimeSeriesExplanation(
         class_names=['0', '1'], feature_selection='auto')
-    exp = explainer.explain_instance(series, new_predict, num_features=num_features, num_samples=50, num_slices=num_slices,
+    exp = explainer.explain_instance(series, new_predict, num_features=num_features, num_samples=5000, num_slices=num_slices,
                                      replacement_method='total_mean', training_set=train_X_shaped, top_labels=1)
     # print(exp.available_labels()[0])
-    print(exp.as_list(label=1))
+    # print(exp.as_list(label=1))
     '''
     explainer = LimeTimeSeriesExplanation(
         class_names=['0', '1'], feature_selection='auto')
@@ -97,10 +95,10 @@ if __name__ == "__main__":
                                      replacement_method='total_mean', training_set=train_X)
     # print(exp.available_labels()[0])
     print(exp.as_list())
-
+    '''
     values_per_slice = math.ceil(len(series) / num_slices)
     plt.plot(series, color='b', label='Explained instance')
-    plt.plot(test_X_shaped[15:, :].mean(),
+    plt.plot(test_X_shaped[5:, :].mean(axis=0),
              color='green', label='Mean of other class')
     plt.legend(loc='lower left')
     for i in range(num_features):
