@@ -5,7 +5,7 @@ import itertools
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 from tensorflow import keras
-
+import tensorflow as tf
 from utilities import auc_roc, f1_m, precision_m, recall_m
 
 
@@ -15,7 +15,7 @@ def evaluate(model_name, data_X, data_y):
         'f1_m': f1_m,
         'precision_m': precision_m,
         'recall_m': recall_m,
-        'auc_roc': auc_roc,
+        'auc_roc': tf.keras.metrics.AUC(),
         'num_classes': 1,
         'input_shape': (data_X.shape[1], 1)
     }

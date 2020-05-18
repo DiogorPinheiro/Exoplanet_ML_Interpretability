@@ -60,8 +60,8 @@ if __name__ == "__main__":
         test_X, axis=2)
 
     model = getModel(CNN_MODEL_DIRECTORY)   # Load Model
-    #model = KNN()
-    #model.fit(train_X, train_Y)
+    # model.summary()
+
     # ----------------------- Check for correct predictions ------------------------
 
     prediction = checkPrediction(model, test_X_shaped, test_Y)
@@ -73,9 +73,9 @@ if __name__ == "__main__":
 
     # -------------------------------------------------------------------------------
 
-    # evaluation(model, global_X_shaped, global_Y)  # Evaluate Model
-
-    idx = correct_predictions[2]
+    evaluation(CNN_MODEL_DIRECTORY, test_X_shaped, test_Y)  # Evaluate Model
+    '''
+    idx = correct_predictions[4]
     num_features = 10
     num_slices = 24
     series = test_X_shaped[idx]
@@ -88,14 +88,14 @@ if __name__ == "__main__":
                                      replacement_method='total_mean', training_set=train_X_shaped, top_labels=1)
     # print(exp.available_labels()[0])
     # print(exp.as_list(label=1))
-    '''
+    
     explainer = LimeTimeSeriesExplanation(
         class_names=['0', '1'], feature_selection='auto')
     exp = explainer.explain_instance(series, model.predict_proba, num_features=num_features, num_samples=50, num_slices=num_slices,
                                      replacement_method='total_mean', training_set=train_X)
     # print(exp.available_labels()[0])
     print(exp.as_list())
-    '''
+    
     values_per_slice = math.ceil(len(series) / num_slices)
     plt.plot(series, color='b', label='Explained instance')
     plt.plot(test_X_shaped[5:, :].mean(axis=0),
@@ -107,3 +107,4 @@ if __name__ == "__main__":
         end = start + values_per_slice
         plt.axvspan(start, end, color='red', alpha=abs(weight*2))
     plt.show()
+    '''
