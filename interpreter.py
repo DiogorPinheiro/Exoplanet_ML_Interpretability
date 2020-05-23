@@ -80,7 +80,7 @@ if __name__ == "__main__":
     num_features = 5
     num_slices = 40
 
-    for i in range(10):     # Positive
+    for i in range(10):     # Positives
         idx = correct_predictions[i]
         series = test_X_shaped[idx]
 
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         explainer = LimeTimeSeriesExplanation(
             class_names=['0', '1'], feature_selection='auto')
         exp = explainer.explain_instance(series, new_predict, num_features=num_features, num_samples=5000, num_slices=num_slices,
-                                         replacement_method='total_mean', training_set=train_X_shaped, top_labels=1)
+                                         replacement_method='total_mean', training_set=train_X_shaped, top_labels=0)
         # print(exp.available_labels()[0])
         # print(exp.as_list(label=1))
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
                  color='green', label='Mean of other class')
         plt.legend(loc='lower left')
         for i in range(num_features):
-            feature, weight = exp.as_list()[i]
+            feature, weight = exp.as_list(label=0)[i]
             start = feature * values_per_slice
             end = start + values_per_slice
             plt.axvspan(start, end, color='red', alpha=abs(weight*2))
