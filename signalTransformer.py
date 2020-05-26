@@ -58,9 +58,21 @@ def replace_curve(indexes, data, mean_value):
 
 
 def shift_signal(index1, index2, data):
+    '''
+        Change segment from index1 to index2 and vice-versa
+        output: group of segments 
+    '''
     aux = data[index1]
     data[index1] = data[index2]
     data[index2] = aux
+    return data
+
+
+def clone_signal(index1, index2, data):
+    '''
+        Replace segment at index2 with the segment at index1
+    '''
+    data[index2] = data[index1]
     return data
 
 # ----------------------------- Main Functions --------------------------------
@@ -102,4 +114,16 @@ def shiftSegments(index1, index2, groups, data, posindex):
 
     return data_copy[posindex]
 
-# Clonar Pico
+
+def cloneSegment(index1, index2, groups, data, posindex):
+    cloned_data = clone_signal(1, 2, groups)
+    new_curve = groupToPoints(cloned_data)
+    new_curve = np.array(new_curve)
+
+    data_copy = data.copy()
+    data_copy[posindex] = list(
+        new_curve.reshape((new_curve.shape[0], 1)))
+
+    #chunkVisualization(data[posindex], 400)
+
+    return data_copy[posindex]
