@@ -85,7 +85,8 @@ if __name__ == "__main__":
     idx = 4
     groups = createGroups(test_X_shaped[idx], 40, 5)
     #series = test_X_shaped[idx]
-    series = cloneSegment(2, 0, groups, test_X_shaped, idx)
+    #series = cloneSegment(2, 4, groups, test_X_shaped, idx)
+    series = shiftSegments(2, 4, groups, test_X_shaped, idx)
 
     explainer = LimeTimeSeriesExplanation(
         class_names=['0', '1'], feature_selection='auto')
@@ -102,7 +103,7 @@ if __name__ == "__main__":
         start = feature * values_per_slice
         end = start + values_per_slice
         plt.axvspan(start, end, color='red', alpha=abs(weight*2))
-        plt.savefig('cloned_1.png')
+        plt.savefig('shifted_try2_1.png')
 
     '''
     for slices in num_slices_set:

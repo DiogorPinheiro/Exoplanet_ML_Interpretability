@@ -102,7 +102,7 @@ def removeSegments(indexes, groups, data, posIndex):
 
 
 def shiftSegments(index1, index2, groups, data, posindex):
-    shifted_data = shift_signal(1, 2, groups)
+    shifted_data = shift_signal(index1, index2, groups)
     new_curve = groupToPoints(shifted_data)
     new_curve = np.array(new_curve)
 
@@ -116,7 +116,7 @@ def shiftSegments(index1, index2, groups, data, posindex):
 
 
 def cloneSegment(index1, index2, groups, data, posindex):
-    cloned_data = clone_signal(1, 2, groups)
+    cloned_data = clone_signal(index1, index2, groups)
     new_curve = groupToPoints(cloned_data)
     new_curve = np.array(new_curve)
 
