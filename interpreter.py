@@ -135,6 +135,7 @@ if __name__ == "__main__":
                     plt.axvspan(start, end, color='red', alpha=abs(weight*2))
                 plt.savefig("slices_"+str(slice)+"feat_" +
                             str(feat)+"/"+str(idx)+'_positive.png')
+                plt.close()
 
             negatives = [0, 2, 3, 5, 6, 7, 10, 12, 15, 17]
             for i in negatives:     # Negatives
@@ -159,4 +160,5 @@ if __name__ == "__main__":
                     plt.axvspan(start, end, color='red', alpha=abs(weight*2))
                 plt.savefig("slices_"+str(slice)+"feat_" +
                             str(feat)+"/"+str(idx)+'_negative.png')
+                plt.close()
     '''
