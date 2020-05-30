@@ -33,8 +33,7 @@ global_X = []
 
 def new_predict(data):
     y_pred = model.predict(data).reshape(-1, 1)
-    y_pred = (y_pred > 0.5),
-    print(y_pred)
+    y_pred = (y_pred > 0.5)
     # print(np.array(
     #    list(zip(1-y_pred.reshape(data.shape[0]), y_pred.reshape(data.shape[0])))))
     return np.hstack((1-y_pred, y_pred))
@@ -66,27 +65,26 @@ if __name__ == "__main__":
 
     # ----------------------- Check for correct predictions ------------------------
 
-    prediction = checkPrediction(model, test_X_shaped, test_Y)
-    correct_predictions = []
+    #prediction = checkPrediction(model, test_X_shaped, test_Y)
+    #correct_predictions = []
 
-    for index, value in enumerate(test_Y):
-        if value == prediction[index] and value == 1:
-            correct_predictions.append(index)
+    # for index, value in enumerate(test_Y):
+    #    if value == prediction[index] and value == 1:
+    #        correct_predictions.append(index)
 
-    print(correct_predictions)
+    # print(correct_predictions)
     # -------------------------------------------------------------------------------
 
     # evaluation(CNN_MODEL_DIRECTORY, test_X_shaped, test_Y)  # Evaluate Model
 
     # PC : 1, 4, 8, 9, 11, 13, 14, 16, 23, 27            |  !PC: 0, 2, 3, 5, 6, 7, 10, 12, 15, 17
 
-    '''
     #idx = correct_predictions[0]
-    idx = 2
-    #groups = createGroups(test_X_shaped[idx], 40, 5)
-    series = test_X_shaped[idx]
+    idx = 2242
+    groups = createGroups(test_X_shaped[idx], 40, 5)
+    #series = test_X_shaped[idx]
     #series = cloneSegment(2, 4, groups, test_X_shaped, idx)
-    #series = shiftSegments(2, 4, groups, test_X_shaped, idx)
+    series = shiftSegments(2, 4, groups, test_X_shaped, idx)
 
     explainer = LimeTimeSeriesExplanation(
         class_names=['0', '1'], feature_selection='auto')
@@ -103,8 +101,7 @@ if __name__ == "__main__":
         start = feature * values_per_slice
         end = start + values_per_slice
         plt.axvspan(start, end, color='red', alpha=abs(weight*2))
-        plt.savefig('pos.png')
-    '''
+        plt.savefig('2242.png')
 
     num_features_set = [5, 10, 15, 20]
     num_slices_set = [10, 20, 30, 40]
@@ -119,7 +116,7 @@ if __name__ == "__main__":
             plt.savefig('Images/Light_Curves/Zeros_'+str(f)+'.png')
         plt.close()
     '''
-
+    '''
     for slices in num_slices_set:
 
         for feat in num_features_set:
@@ -151,7 +148,7 @@ if __name__ == "__main__":
                             str(feat)+"/"+str(idx)+'_positive.png')
                 plt.close()
 
-            negatives = [0, 2, 3, 5, 6, 7, 10, 12, 15, 17]
+            negatives = [2, 3, 5, 6, 7, 10, 12, 15, 17, 18]
             for i in negatives:     # Negatives
                 series = test_X_shaped[i]
 
@@ -175,3 +172,4 @@ if __name__ == "__main__":
                 plt.savefig("slices_"+str(slices)+"feat_" +
                             str(feat)+"/"+str(idx)+'_negative.png')
                 plt.close()
+    '''
