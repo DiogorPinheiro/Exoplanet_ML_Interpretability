@@ -80,14 +80,14 @@ if __name__ == "__main__":
     # PC : 1, 4, 8, 9, 11, 13, 14, 16, 23, 27            |  !PC: 0, 2, 3, 5, 6, 7, 10, 12, 15, 17
 
     #idx = correct_predictions[0]
-    idx = 2242
+    idx = 2613
     groups = createGroups(test_X_shaped[idx], 40, 5)
-    #series = test_X_shaped[idx]
+    series = test_X_shaped[idx]
     #series = cloneSegment(2, 4, groups, test_X_shaped, idx)
     series = shiftSegments(2, 4, groups, test_X_shaped, idx)
 
     explainer = LimeTimeSeriesExplanation(
-        class_names=['0', '1'], feature_selection='auto')
+        class_names=['0', '1'], feature_selection='lasso_path')
     exp = explainer.explain_instance(series, new_predict, num_features=5, num_samples=5000, num_slices=40,
                                      replacement_method='total_mean', training_set=train_X_shaped, labels=(0, 1))
 
@@ -101,7 +101,7 @@ if __name__ == "__main__":
         start = feature * values_per_slice
         end = start + values_per_slice
         plt.axvspan(start, end, color='red', alpha=abs(weight*2))
-        plt.savefig('2242.png')
+        plt.savefig('2613.png')
 
     num_features_set = [5, 10, 15, 20]
     num_slices_set = [10, 20, 30, 40]
