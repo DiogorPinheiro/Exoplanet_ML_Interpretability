@@ -79,12 +79,20 @@ if __name__ == "__main__":
 
     # PC : 1, 4, 8, 9, 11, 13, 14, 16, 23, 27            |  !PC: 0, 2, 3, 5, 6, 7, 10, 12, 15, 17
 
+    aux = []
+
+    for index, value in enumerate(test_X_shaped):
+        if test_Y[index] == 0:
+            aux.append(value)
+
+    aux = np.array(aux)
+
     #idx = correct_predictions[0]
-    idx = 2613
-    groups = createGroups(test_X_shaped[idx], 40, 5)
+    idx = 1
+    #groups = createGroups(test_X_shaped[idx], 40, 5)
     series = test_X_shaped[idx]
     #series = cloneSegment(2, 4, groups, test_X_shaped, idx)
-    series = shiftSegments(2, 4, groups, test_X_shaped, idx)
+    #series = shiftSegments(2, 4, groups, test_X_shaped, idx)
 
     explainer = LimeTimeSeriesExplanation(
         class_names=['0', '1'], feature_selection='lasso_path')
@@ -93,7 +101,7 @@ if __name__ == "__main__":
 
     values_per_slice = math.ceil(len(series) / 40)
     plt.plot(series, color='b', label='Explained instance')
-    plt.plot(test_X_shaped[(idx+1):, :].mean(axis=0),
+    plt.plot(aux[:, :].mean(axis=0),
              color='green', label='Mean of other class')
     plt.legend(loc='lower left')
     for i in range(5):
