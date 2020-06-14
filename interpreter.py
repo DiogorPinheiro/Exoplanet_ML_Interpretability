@@ -13,7 +13,7 @@ from utilities import recall_m, f1_m, precision_m, auc_roc, checkPrediction
 from signalTransformer import shiftSegments, removeSegments, createGroups, cloneSegment
 from evaluation import evaluation
 
-CNN_MODEL_DIRECTORY = 'model/CNN.h5'
+CNN_MODEL_DIRECTORY = 'model/CNN_global.hdf5'
 
 
 def getModel(model_name):
@@ -114,70 +114,13 @@ if __name__ == "__main__":
     num_features_set = [5, 10, 15, 20]
     num_slices_set = [10, 20, 30, 40]
     correct_predictions = [0, 4, 8, 11, 98, 106, 132, 164, 235, 477, 2242]
-    '''
-    for f in range(len(test_X_shaped)):
-        plt.plot(test_X_shaped[f],
-                 color='b', label='Explained instance')
-        if test_Y[f] == 1:
-            plt.savefig('Images/Light_Curves/Ones_'+str(f)+'.png')
-        else:
-            plt.savefig('Images/Light_Curves/Zeros_'+str(f)+'.png')
-        plt.close()
-    '''
-    '''
-    for slices in num_slices_set:
 
-        for feat in num_features_set:
-            num_features = feat
-            num_slices = slices
-
-            for i in range(10):     # Positives
-                idx = correct_predictions[i]
-                series = test_X_shaped[idx]
-
-                explainer = LimeTimeSeriesExplanation(
-                    class_names=['0', '1'], feature_selection='auto')
-                exp = explainer.explain_instance(series, new_predict, num_features=num_features, num_samples=5000, num_slices=num_slices,
-                                                 replacement_method='total_mean', training_set=train_X_shaped, labels=(0, 1))
-                # print(exp.available_labels()[0])
-                # print(exp.as_list(label=1))
-
-                values_per_slice = math.ceil(len(series) / num_slices)
-                plt.plot(series, color='b', label='Explained instance')
-                plt.plot(test_X_shaped[(idx+1):, :].mean(axis=0),
-                         color='green', label='Mean of other class')
-                plt.legend(loc='lower left')
-                for i in range(num_features):
-                    feature, weight = exp.as_list()[i]
-                    start = feature * values_per_slice
-                    end = start + values_per_slice
-                    plt.axvspan(start, end, color='red', alpha=abs(weight*2))
-                plt.savefig("slices_"+str(slices)+"feat_" +
-                            str(feat)+"/"+str(idx)+'_positive.png')
-                plt.close()
-
-            negatives = [2, 3, 5, 6, 7, 10, 12, 15, 17, 18]
-            for i in negatives:     # Negatives
-                series = test_X_shaped[i]
-
-                explainer = LimeTimeSeriesExplanation(
-                    class_names=['0', '1'], feature_selection='auto')
-                exp = explainer.explain_instance(series, new_predict, num_features=num_features, num_samples=5000, num_slices=num_slices,
-                                                 replacement_method='total_mean', training_set=train_X_shaped, labels=(0, 1))
-                # print(exp.available_labels()[0])
-                # print(exp.as_list(label=1))
-
-                values_per_slice = math.ceil(len(series) / num_slices)
-                plt.plot(series, color='b', label='Explained instance')
-                plt.plot(test_X_shaped[(i+1):, :].mean(axis=0),
-                         color='green', label='Mean of other class')
-                plt.legend(loc='lower left')
-                for i in range(num_features):
-                    feature, weight = exp.as_list(label=0)[i]
-                    start = feature * values_per_slice
-                    end = start + values_per_slice
-                    plt.axvspan(start, end, color='red', alpha=abs(weight*2))
-                plt.savefig("slices_"+str(slices)+"feat_" +
-                            str(feat)+"/"+str(idx)+'_negative.png')
-                plt.close()
-    '''
+    # Plot light curves
+    # for f in range(len(test_X_shaped)):
+    #    plt.plot(test_X_shaped[f],
+    #             color='b', label='Explained instance')
+    #    if test_Y[f] == 1:
+    #        plt.savefig('Images/Light_Curves/Ones_'+str(f)+'.png')
+    #    else:
+    #        plt.savefig('Images/Light_Curves/Zeros_'+str(f)+'.png')
+    #    plt.close()

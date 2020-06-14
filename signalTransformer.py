@@ -14,9 +14,11 @@ def buildArray(mean_value, array):
     '''
         Builds an array with the light curve mean value
 
-        input: mean_value (float)
-               array (list of lists )
-        output: array of floats
+        @param mean_value (float): mean value of data
+        @param array (list[list[float]]): light curve data
+
+        @return [list[float]): created array
+
     '''
     aux = []
     for index, i in enumerate(array):
@@ -33,8 +35,10 @@ def groupToPoints(data):
     '''
         Convert light curve divided by groups to a list of points
 
-        input: data (list of lists of lists)
-        output: list
+        @param data (np.ndarray)
+
+        @return (list[float])
+
     '''
     aux = []
     for v1, x in enumerate(data):
@@ -45,6 +49,16 @@ def groupToPoints(data):
 
 
 def replace_curve(indexes, data, mean_value):
+    '''
+        Replace slices of the light curve with its mean value.
+
+        @param indexes (list[int]): indexes where the change will be made
+        @param data (np.ndarray)
+        @param mean_value (float): mean value of the data
+
+        @return (list[list[float]])
+
+    '''
     aux = []
 
     for i, d in enumerate(data):
@@ -59,8 +73,14 @@ def replace_curve(indexes, data, mean_value):
 
 def shift_signal(index1, index2, data):
     '''
-        Change segment from index1 to index2 and vice-versa
-        output: group of segments 
+        Change segment from index1 to index2 and vice-versa.
+
+        @param index1 (int): first index to change data
+        @param index2 (int): second index to change data
+        @param data (np.ndarray)
+
+        @return (list[list[float]])
+
     '''
     aux = data[index1]
     data[index1] = data[index2]
@@ -70,7 +90,14 @@ def shift_signal(index1, index2, data):
 
 def clone_signal(index1, index2, data):
     '''
-        Replace segment at index2 with the segment at index1
+        Replace segment at index2 with the segment at index1.
+
+        @param index1 (int): first index to change data
+        @param index2 (int): second index to change data
+        @param data (np.ndarray)
+
+        @return (list[list[float]])
+
     '''
     data[index2] = data[index1]
     return data
@@ -79,6 +106,17 @@ def clone_signal(index1, index2, data):
 
 
 def createGroups(data, num_chunks=40, divider_size=5):
+    '''
+        Slice data into chunks and group them.
+
+        @param data (np.ndarray)
+        @param num_chunks (int): Number of chunks the data will be "sliced"
+        @param divider_size (int): number of groups
+
+        @return (np.ndarray)
+
+    '''
+
     chunks = np.array_split(data, num_chunks)
     groups = np.array_split(chunks, divider_size)
 
@@ -86,6 +124,18 @@ def createGroups(data, num_chunks=40, divider_size=5):
 
 
 def removeSegments(indexes, groups, data, posIndex):
+    '''
+        Replaces certain groups with the mean value of the data.
+
+        @param indexes (list[int]): indexes of the groups that will be changed
+        @param groups (np.ndarray): data divided in groups
+        @param data (np.ndarray)
+        @param posIndex (int): row of the light curve to be modified 
+
+        @return (np.ndarray)
+
+    '''
+
     mean_value = np.mean(data)   # Light Curve Mean Value
     replace_curve(indexes, groups, mean_value)
 
@@ -102,6 +152,19 @@ def removeSegments(indexes, groups, data, posIndex):
 
 
 def shiftSegments(index1, index2, groups, data, posindex):
+    '''
+        Shift two groups (index 1 goes to index 2 and vice-versa).
+
+        @param index1 (int): first index to change data
+        @param index2 (int): second index to change data
+        @param groups (np.ndarray): data divided in groups
+        @param data (np.ndarray)
+        @param posIndex (int): row of the light curve to be modified 
+
+        @return (np.ndarray)
+
+    '''
+
     shifted_data = shift_signal(index1, index2, groups)
     new_curve = groupToPoints(shifted_data)
     new_curve = np.array(new_curve)
@@ -116,6 +179,18 @@ def shiftSegments(index1, index2, groups, data, posindex):
 
 
 def cloneSegment(index1, index2, groups, data, posindex):
+    '''
+        Clone two groups (index 1 goes to index 2 and vice-versa).
+
+        @param index1 (int): first index to change data
+        @param index2 (int): second index to change data
+        @param groups (np.ndarray): data divided in groups
+        @param data (np.ndarray)
+        @param posIndex (int): row of the light curve to be modified 
+
+        @return (np.ndarray)
+
+    '''
     cloned_data = clone_signal(index1, index2, groups)
     new_curve = groupToPoints(cloned_data)
     new_curve = np.array(new_curve)
