@@ -1,4 +1,6 @@
 data/global_test.csv
 data/global_train.csv
 Test
-Images
+Images/Experiments
+Images/Instances
+Images/Light_Curves
